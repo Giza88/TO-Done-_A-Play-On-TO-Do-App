@@ -1,0 +1,71 @@
+html, body, #root {
+  margin: 0;
+  height: 100%;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #f5f5f5;
+}
+
+body, h1, h2, h3 {
+  font-weight: 300;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+
+  &:hover {
+    color: #5aadbb;
+  }
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+
+input[type="checkbox"]:checked {
+  border-color: #5dc2af;
+  background-color: #5dc2af;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+input[type="checkbox"]:hover {
+  border-color: #5dc2af;
+}
+
+/* List item hover effect */
+li:hover button {
+  opacity: 1 !important;
+}
+
+/* Clear completed button hover effect */
+div button[type="button"]:last-child:hover {
+  text-decoration: underline;
+}
+
+/* Input placeholder styling */
+input[type="text"]::placeholder {
+  color: #999;
+  font-style: italic;
+}
