@@ -44,36 +44,44 @@ export class TodoApp extends Component {
   }
 
   saveTodos(todos) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+    } catch (e) {
+      // Ignore storage failures (private mode, quota, disabled storage)
+    }
   }
 
   addTodo(text) {
-    if (!text.trim()) {
+    const trimmed = text.trim();
+    if (!trimmed) {
       return;
     }
     const newTodo = {
       id: Date.now(),
-      text: text.trim(),
+      text: trimmed,
       completed: false,
       createdAt: new Date().toISOString()
     };
-    const todos = this.state.todos.concat([newTodo]);
-    this.setState({todos});
-    this.saveTodos(todos);
+    this.setState(prevState => {
+      const todos = prevState.todos.concat([newTodo]);
+      return {todos};
+    }, () => this.saveTodos(this.state.todos));
   }
 
   toggleTodo(id) {
-    const todos = this.state.todos.map(todo =>
-      todo.id === id ? Object.assign({}, todo, {completed: !todo.completed}) : todo
-    );
-    this.setState({todos});
-    this.saveTodos(todos);
+    this.setState(prevState => {
+      const todos = prevState.todos.map(todo =>
+        todo.id === id ? Object.assign({}, todo, {completed: !todo.completed}) : todo
+      );
+      return {todos};
+    }, () => this.saveTodos(this.state.todos));
   }
 
   deleteTodo(id) {
-    const todos = this.state.todos.filter(todo => todo.id !== id);
-    this.setState({todos});
-    this.saveTodos(todos);
+    this.setState(prevState => {
+      const todos = prevState.todos.filter(todo => todo.id !== id);
+      return {todos};
+    }, () => this.saveTodos(this.state.todos));
   }
 
   editTodo(id, newText) {
@@ -81,24 +89,28 @@ export class TodoApp extends Component {
       this.deleteTodo(id);
       return;
     }
-    const todos = this.state.todos.map(todo =>
-      todo.id === id ? Object.assign({}, todo, {text: newText.trim()}) : todo
-    );
-    this.setState({todos});
-    this.saveTodos(todos);
+    const trimmed = newText.trim();
+    this.setState(prevState => {
+      const todos = prevState.todos.map(todo =>
+        todo.id === id ? Object.assign({}, todo, {text: trimmed}) : todo
+      );
+      return {todos};
+    }, () => this.saveTodos(this.state.todos));
   }
 
   toggleAll() {
-    const allCompleted = this.state.todos.every(todo => todo.completed);
-    const todos = this.state.todos.map(todo => Object.assign({}, todo, {completed: !allCompleted}));
-    this.setState({todos});
-    this.saveTodos(todos);
+    this.setState(prevState => {
+      const allCompleted = prevState.todos.every(todo => todo.completed);
+      const todos = prevState.todos.map(todo => Object.assign({}, todo, {completed: !allCompleted}));
+      return {todos};
+    }, () => this.saveTodos(this.state.todos));
   }
 
   clearCompleted() {
-    const todos = this.state.todos.filter(todo => !todo.completed);
-    this.setState({todos});
-    this.saveTodos(todos);
+    this.setState(prevState => {
+      const todos = prevState.todos.filter(todo => !todo.completed);
+      return {todos};
+    }, () => this.saveTodos(this.state.todos));
   }
 
   setFilter(filter) {
